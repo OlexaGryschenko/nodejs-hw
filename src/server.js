@@ -10,12 +10,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(pino({
-  transport: {
-    target: 'pino-pretty',
-    options: { colorize: true }
-  }
-})); // Опціонально для кращої читабельності в консолі розробки
+
+app.use(pino());
 
 app.get('/notes', (req, res) => {
   res.status(200).json({
