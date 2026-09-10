@@ -26,12 +26,17 @@ app.get('/notes/:noteId', (req, res) => {
   });
 });
 
+app.get('/test-error', (req, res) => {
+  throw new Error('Simulated server error');
+});
 
+// Глобальний middleware для обробки помилок (404)
 app.use((req, res, next) => {
   res.status(404).json({
     message: "Route not found"
   });
 });
+
 
 // Глобальний middleware для обробки помилок (500)
 app.use((err, req, res, next) => {
@@ -43,3 +48,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
