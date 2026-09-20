@@ -1,6 +1,6 @@
 // src/controllers/notesController.js
 import createHttpError from 'http-errors';
-import { note } from "../models/note.js";
+import { Note } from "../models/note.js";
 
 
 export const getAllNotes = async (req, res, next) => {
