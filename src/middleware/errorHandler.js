@@ -21,3 +21,5 @@ export const errorHandler = (err, _req, res, _next) => {
       : err.message,
   });
 };
+
+export default errorHandler;
