@@ -16,8 +16,8 @@ import notesRouter from './routes/notesRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-console.log("PORT from env:", process.env.PORT); // Має вивести значення твого PORT
-console.log("DB_URI from env:", process.env.MONGODB_URI); // Має вивести твою URI базу даних
+/* console.log("PORT from env:", process.env.PORT); // Має вивести значення твого PORT
+console.log("DB_URI from env:", process.env.MONGO_URl); // Має вивести твою URI базу даних */
 
 /* Middleware */
 app.use(logger);
