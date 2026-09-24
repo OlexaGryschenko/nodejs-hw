@@ -27,8 +27,8 @@ app.use(express.json());
 app.use(pino());
 
 // реестрація маршрутів
-
 app.use(notesRouter);
+
 // 404 — якщо маршрут не знайдено
 app.use(notFoundHandler);
 

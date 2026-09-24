@@ -5,8 +5,26 @@ import { Note } from "../models/note.js";
 
 export const getAllNotes = async (req, res, next) => {
   try {
-    const notes = await Note.find();
-    res.status(200).json(notes);
+    const { tag, search } = req.query;
+    const query = {};
+if (tag) {
+      query.tag = tag;
+    }
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { content: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const notes = await Note.find(query);
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully retrieved notes',
+      data: notes,
+    });
+
   } catch (error) {
     next(error);
   }
