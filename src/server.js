@@ -3,6 +3,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import { errors } from 'celebrate';
 
 import pino from 'pino-http';
 import { connectMongoDB } from './db/connectMongoDB.js';
@@ -32,8 +33,11 @@ app.use(notesRouter);
 // 404 — якщо маршрут не знайдено
 app.use(notFoundHandler);
 
+// Обробник помилок від celebrate має бути ПЕРЕД твоїм загальним errorHandler
+app.use(errors());
 
-// Глобальний middleware для обробки помилок (404)
+
+/// 404 — якщо маршрут не знайдено
 app.use(errorHandler);
 
 // підключення до MongoDB
