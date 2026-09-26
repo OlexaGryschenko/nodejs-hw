@@ -5,7 +5,12 @@ import { Note } from "../models/note.js";
 
 export const getAllNotes = async (req, res, next) => {
   try {
-    const { tag, search } = req.query;
+    const { tag, search, page = 1, perPage = 10 } = req.query;
+
+    const pageNumber = Number(page);
+    const limitNumber = Number(perPage);
+    const skip = (pageNumber - 1) * limitNumber;
+
     const query = {};
 if (tag) {
       query.tag = tag;
@@ -17,12 +22,24 @@ if (tag) {
       ];
     }
 
-    const notes = await Note.find(query);
+    // Паралельне виконання запитів через Promise.all
+    const [notes, totalNotes] = await Promise.all([
+      Note.find().where(query).skip(skip).limit(limitNumber),
+      Note.countDocuments().where(query)
+    ]);
+
+    const totalPages = Math.ceil(totalNotes / limitNumber);
 
     res.status(200).json({
       status: 200,
       message: 'Successfully retrieved notes',
-      data: notes,
+      data: {
+        page: pageNumber,
+        perPage: limitNumber,
+        totalNotes,
+        totalPages,
+        notes,
+      },
     });
 
   } catch (error) {

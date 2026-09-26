@@ -5,11 +5,11 @@ import express from 'express';
 import cors from 'cors';
 import { errors } from 'celebrate';
 
-import pino from 'pino-http';
+// import pino from 'pino-http';
 import { connectMongoDB } from './db/connectMongoDB.js';
 
 import { logger } from './middleware/logger.js';
-import errorHandler from './middleware/errorHandler.js';
+import { errorHandler} from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 
 import notesRouter from './routes/notesRoutes.js';
@@ -25,7 +25,7 @@ app.use(logger);
 app.use(cors());
 app.use(express.json());
 
-app.use(pino());
+// app.use(pino());
 
 // реестрація маршрутів
 app.use(notesRouter);
