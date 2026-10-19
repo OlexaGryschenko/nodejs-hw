@@ -14,6 +14,9 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 
 import notesRouter from './routes/notesRoutes.js';
 
+import cookieParser from 'cookie-parser'; // 1. Додай імпорт cookie-parser
+import authRouter from './routes/authRoutes.js'; // 2. Додай імпорт authRouter
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -24,10 +27,16 @@ console.log("DB_URI from env:", process.env.MONGO_URl); // Має вивести
 app.use(logger);
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser()); // 3. Підключи cookie-parser для роботи з req.cookies
 
 // app.use(pino());
+// 4. Головний маршрут для перевірки стану сервера
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Server is running' });
+});
 
 // реестрація маршрутів
+app.use(authRouter);
 app.use(notesRouter);
 
 // 404 — якщо маршрут не знайдено
