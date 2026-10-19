@@ -15,7 +15,7 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import notesRouter from './routes/notesRoutes.js';
 
 import cookieParser from 'cookie-parser';
-import authRouter from './routes/authRouters.js'; 
+import authRouter from './routes/authRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
