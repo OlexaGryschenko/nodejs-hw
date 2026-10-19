@@ -11,21 +11,21 @@ export const getAllNotes = async (req, res, next) => {
     const limitNumber = Number(perPage);
     const skip = (pageNumber - 1) * limitNumber;
 
-    const query = { userId: req.user._id };
+    const mongooseQuery = Note.find().where('userId').equals(req.user._id);
 if (tag) {
-      query.tag = tag;
+      mongooseQuery.where('tag').equals(tag);
     }
     if (search) {
-      query.$or = [
+      mongooseQuery.or([
         { title: { $regex: search, $options: 'i' } },
         { content: { $regex: search, $options: 'i' } },
-      ];
+      ]);
     }
 
     // Паралельне виконання запитів через Promise.all
     const [notes, totalNotes] = await Promise.all([
-      Note.find().where(query).skip(skip).limit(limitNumber),
-      Note.countDocuments().where(query)
+      mongooseQuery.clone().skip(skip).limit(limitNumber),
+      mongooseQuery.clone().countDocuments(),
     ]);
 
     const totalPages = Math.ceil(totalNotes / limitNumber);

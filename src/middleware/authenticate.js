@@ -7,7 +7,7 @@ export const authenticate = async (req, res, next) => {
   try {
     const {sessionId, accessToken } = req.cookies;
 
-    if (!accessToken) {
+    if (!sessionId || !accessToken) {
       return next(createHttpError(401, 'Session ID and Access Token are required'));
     }
 

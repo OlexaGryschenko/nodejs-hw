@@ -13,7 +13,7 @@ export const registerUser = async (req, res, next) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return next(createHttpError(409, 'Email in use'));
+      return next(createHttpError(400, 'Email in use'));
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -22,6 +22,9 @@ export const registerUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
+
+    const session = await createSession(newUser._id);
+    setSessionCookies(res, session);
 
     const userObject = newUser.toObject();
     delete userObject.password;
@@ -77,7 +80,7 @@ export const logoutUser = async (req, res, next) => {
   }
 };
 
-export const refreshSession = async (req, res, next) => {
+export const refreshUserSession = async (req, res, next) => {
   try {
     const { sessionId, refreshToken } = req.cookies;
 
@@ -92,6 +95,9 @@ export const refreshSession = async (req, res, next) => {
 
     if (new Date() > new Date(session.refreshTokenValidUntil)) {
       await Session.deleteOne({ _id: sessionId });
+      res.clearCookie('sessionId');
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
       return next(createHttpError(401, 'Refresh token expired'));
     }
 
@@ -101,6 +107,8 @@ export const refreshSession = async (req, res, next) => {
     setSessionCookies(res, newSession);
 
     res.status(200).json({
+      status: 200,
+      message: 'Successfully refreshed a session!',
       accessToken: newSession.accessToken,
     });
   } catch (error) {
