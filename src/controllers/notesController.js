@@ -31,16 +31,12 @@ if (tag) {
     const totalPages = Math.ceil(totalNotes / limitNumber);
 
     res.status(200).json({
-      status: 200,
-      message: 'Successfully retrieved notes',
-      data: {
         page: pageNumber,
         perPage: limitNumber,
         totalNotes,
         totalPages,
         notes,
-      },
-    });
+      });
 
   } catch (error) {
     next(error);
