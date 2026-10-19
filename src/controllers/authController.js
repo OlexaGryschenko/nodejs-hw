@@ -5,6 +5,33 @@ import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
 import { createSession, setSessionCookies } from '../services/auth.js';
 
+
+
+export const registerUserController = async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return next(createHttpError(409, 'Email in use'));
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    const userObject = newUser.toObject();
+    delete userObject.password;
+
+    res.status(201).json(userObject);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -30,6 +57,8 @@ export const loginUser = async (req, res, next) => {
     next(error);
   }
 };
+
+
 export const logoutUser = async (req, res, next) => {
   try {
     const { sessionId } = req.cookies;
@@ -48,3 +77,33 @@ export const logoutUser = async (req, res, next) => {
   }
 };
 
+export const refreshSessionController = async (req, res, next) => {
+  try {
+    const { sessionId, refreshToken } = req.cookies;
+
+    if (!sessionId || !refreshToken) {
+      return next(createHttpError(401, 'Session or refresh token missing'));
+    }
+
+    const session = await Session.findOne({ _id: sessionId, refreshToken });
+    if (!session) {
+      return next(createHttpError(401, 'Session not found'));
+    }
+
+    if (new Date() > new Date(session.refreshTokenValidUntil)) {
+      await Session.deleteOne({ _id: sessionId });
+      return next(createHttpError(401, 'Refresh token expired'));
+    }
+
+    await Session.deleteOne({ _id: sessionId });
+    const newSession = await createSession(session.userId);
+
+    setSessionCookies(res, newSession);
+
+    res.status(200).json({
+      accessToken: newSession.accessToken,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
