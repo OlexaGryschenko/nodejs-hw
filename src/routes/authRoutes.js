@@ -1,29 +1,22 @@
 // src/routes/authRoutes.js
 import { Router } from 'express';
-import { registerUserSchema } from '../validations/authValidation.js';
-import { registerUserController, loginUser, refreshSessionController, logoutUser } from '../controllers/authController.js';
+import {
+  registerUserSchema,
+  loginUserSchema,
+ } from '../validations/authValidation.js';
+import {
+  registerUser,
+  loginUser,
+  refreshUserSession,
+  logoutUser,
+} from '../controllers/authController.js';
+import { celebrate } from 'celebrate';
 
 const authRouter = Router();
 
-authRouter.post(
-  '/register',
-  registerUserSchema,
-  registerUserController
-);
-
-authRouter.post(
-  '/login',
-  loginUser
-);
-
-authRouter.post(
-  '/refresh',
-  refreshSessionController
-);
-
-authRouter.post(
-  '/logout',
-  logoutUser
-);
+authRouter.post('/register', celebrate(registerUserSchema), registerUser);
+authRouter.post('/login', celebrate(loginUserSchema), loginUser);
+authRouter.post('/refresh', refreshUserSession);
+authRouter.post('/logout', logoutUser);
 
 export default authRouter;

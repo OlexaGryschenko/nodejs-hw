@@ -7,7 +7,7 @@ import { createSession, setSessionCookies } from '../services/auth.js';
 
 
 
-export const registerUserController = async (req, res, next) => {
+export const registerUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
@@ -77,7 +77,7 @@ export const logoutUser = async (req, res, next) => {
   }
 };
 
-export const refreshSessionController = async (req, res, next) => {
+export const refreshSession = async (req, res, next) => {
   try {
     const { sessionId, refreshToken } = req.cookies;
 
