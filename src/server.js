@@ -21,37 +21,22 @@ import userRoutes from './routes/userRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/* console.log("PORT from env:", process.env.PORT); // Має вивести значення твого PORT
-console.log("DB_URI from env:", process.env.MONGO_URl); // Має вивести твою URI базу даних */
-
-/* Middleware */
 app.use(logger);
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser()); // 3. Підключи cookie-parser для роботи з req.cookies
+app.use(cookieParser());
 
-// app.use(pino());
-// 4. Головний маршрут для перевірки стану сервера
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Server is running' });
-});
 
-// реестрація маршрутів
 app.use('/auth', authRouter);
-app.use('/auth', notesRouter);
+app.use(notesRouter);
 app.use('/users', userRoutes);
 
-// 404 — якщо маршрут не знайдено
 app.use(notFoundHandler);
 
-// Обробник помилок від celebrate має бути ПЕРЕД твоїм загальним errorHandler
 app.use(errors());
 
-
-/// 404 — якщо маршрут не знайдено
 app.use(errorHandler);
 
-// підключення до MongoDB
 await connectMongoDB();
 
 app.listen(PORT, () => {
