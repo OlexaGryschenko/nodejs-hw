@@ -16,6 +16,7 @@ import notesRouter from './routes/notesRoutes.js';
 
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoutes.js';
+import userRoutes from './routes/userRouters.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,8 +37,9 @@ app.get('/', (req, res) => {
 });
 
 // реестрація маршрутів
-app.use(authRouter);
-app.use(notesRouter);
+app.use('/auth', authRouter);
+app.use('/auth', notesRouter);
+app.use('/users', userRoutes);
 
 // 404 — якщо маршрут не знайдено
 app.use(notFoundHandler);
