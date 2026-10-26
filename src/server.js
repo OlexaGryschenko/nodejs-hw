@@ -16,7 +16,7 @@ import notesRouter from './routes/notesRoutes.js';
 
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoutes.js';
-import userRoutes from './routes/userRouters.js';
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
