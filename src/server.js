@@ -27,9 +27,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.use('/auth', authRouter);
+app.use( authRouter);
 app.use(notesRouter);
-app.use('/users', userRoutes);
+app.use( userRoutes);
 
 app.use(notFoundHandler);
 
