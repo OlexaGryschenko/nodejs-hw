@@ -19,7 +19,7 @@ export const updateUserAvatar = async (req, res, next) => {
     const updatedUser = await User.findOneAndUpdate(
       { _id: user._id },
       { avatar: result.secure_url },
-      { new: true } // у Mongoose частіше використовують new: true для повернення оновленого документа
+      { returnDocument: 'after' } 
     );
 
     // Повертаємо НОВИЙ url
