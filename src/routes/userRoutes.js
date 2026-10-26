@@ -7,7 +7,7 @@ const router = Router();
 
 // Маршрут для оновлення аватара (доступний лише авторизованим)
 router.patch(
-  '/me/avatar',
+  '/users/me/avatar',
   authenticate,
   upload.single('avatar'),
   updateUserAvatar
